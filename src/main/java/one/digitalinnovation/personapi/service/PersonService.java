@@ -40,10 +40,18 @@ public class PersonService {
 		return listPerson.stream().map(personMapper::toDTO).collect(Collectors.toList());
 	}
 
-
 	public PersonDTO findById(Long id) throws PersonNotFoundException {
-		Person personById = personRepository.findById(id).orElseThrow(() -> new PersonNotFoundException(id));
+		Person personById = verifyById(id);
 		return personMapper.toDTO(personById);
+	}
+
+	public void deletePerson(Long id) throws PersonNotFoundException {
+		verifyById(id);
+		personRepository.deleteById(id);
+	}
+
+	private Person verifyById(Long id) throws PersonNotFoundException {
+		return personRepository.findById(id).orElseThrow(() -> new PersonNotFoundException(id));
 	}
 
 }
